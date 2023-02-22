@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -8,7 +15,7 @@ export ZSH="/home/florentc/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -124,12 +131,10 @@ alias lg='git log --oneline --graph --color'
 alias gcall='git add --all; git commit -m '
 ## AUTRES ##
 alias linkedin_answer='xsel -b < ~/dotfiles/linkedin/linkedinAnswer.txt'
+alias appart='/home/florentc/git/GitHub/Appart_lookup/main.py'
 
 # set options for less
 export LESS='--quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
-
-
-eval `dircolors ~/.dir_colors/dircolors`
 
 prompt_context() {}
 
@@ -151,7 +156,12 @@ tstsnd() {
     sshpass -p qualif scp "$1" qualif@172.18.190.62:~/QUALIF/fakeserver/module/regress/test.cmd;
 }
 
-source /home/florentc/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+gedit() {
+	nohup gedit "$1" >/dev/null 2>&1 &;
+}
+
+
+source /home/florentc/.oh-my-zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 
 ##############################################################
@@ -163,5 +173,11 @@ source /home/florentc/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Delete the actual line
 bindkey '^u' kill-whole-line
 
-# Execute atom to the selected text
-bindkey -s "^q" '^uxsel -o | xargs atom^M'
+# Execute gedit  to the selected text
+bindkey -s "^q" '^uxsel -o | xargs -I {} sh -c "nohup gedit \"{}\" >/dev/null 2>&1 &"^M'
+
+# Execute intellij to the selected text
+bindkey -s "^[q" '^uxsel -o | xargs intellij-idea-community^M'
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
